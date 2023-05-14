@@ -38,8 +38,9 @@ const COMMAND_MSG_LEN_IN_BYTES = 2
 func parse_hello(buffer []byte) (HelloMessage, error) {
 	if len(buffer) < HELLO_MSG_LEN_IN_BYTES {
 		retMsg := HelloMessage{}
-		return retMsg, errors.New(fmt.Sprintf("error::parse_hello::Buffer length invalid. Expected = %q, received = %q", HELLO_MSG_LEN_IN_BYTES, len(buffer)))
-
+		return retMsg, errors.New(fmt.Sprintf("error::parse_hello::Buffer length invalid. Expected = %q, received = %q",
+			HELLO_MSG_LEN_IN_BYTES,
+			len(buffer)))
 	}
 
 	messageType := get_message_type(buffer[4])

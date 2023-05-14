@@ -5,7 +5,7 @@ import (
 	"net"
 )
 
-func Handle_request(cnx net.Conn) {
+func handle_request(cnx net.Conn) {
 	fmt.Printf("handle_request::%v\n", cnx.RemoteAddr().String())
 
 	helloMessageBuffer := make([]byte, HELLO_MSG_LEN_IN_BYTES)

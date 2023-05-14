@@ -31,6 +31,6 @@ func main() {
 			os.Exit(1)
 		}
 
-		Handle_request(cnx)
+		go Handle_request(cnx)
 	}
 }

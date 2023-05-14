@@ -35,8 +35,8 @@ func Test_parse_hello_length_check(t *testing.T) {
 
 func Test_parse_hello_valid(t *testing.T) {
 	helloMessage := []byte{
-		0x00,0x01,
-		0x00,0x01,
+		0x00, 0x01,
+		0x00, 0x01,
 		0x02,
 		0x01,
 	}

@@ -25,6 +25,6 @@ func handle_request(cnx net.Conn) {
 	}
 
 	fmt.Printf("Recieved hello: %+v\n", hello)
-	cnx.Write([]byte{0})
+	cnx.Write([]byte{0x00, 0x01})
 	cnx.Close()
 }

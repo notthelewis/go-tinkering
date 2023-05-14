@@ -1,5 +1,7 @@
-// Test with netcat when running
-// echo "test\n" | nc localhost 1523
+// Test with netcat while running
+
+/// Simple hello message
+// echo "\x00\x01\x00\x01\x02\x01" | nc localhost 1523
 
 package main
 
@@ -23,6 +25,7 @@ func main() {
 	fmt.Println("main::Listening")
 	for {
 		cnx, e := listener.Accept()
+
 		if e != nil {
 			fmt.Printf("Error::main::%v", e.Error())
 			os.Exit(1)

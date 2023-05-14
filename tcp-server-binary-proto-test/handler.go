@@ -4,20 +4,26 @@ import (
 	"fmt"
 	"net"
 )
-
 func Handle_request(cnx net.Conn) {
 	fmt.Printf("handle_request::%v\n", cnx.RemoteAddr().String())
-	// 1kb buffer
-	buffer := make([]byte, 1024)
+    
+    helloMessageBuffer := make([]byte, HELLO_MSG_LEN_IN_BYTES)
 
-	_, e := cnx.Read(buffer)
-	if e != nil {
-		fmt.Printf("error::handle_request::%v\n", e.Error())
-		cnx.Close()
-		return
-	}
+    _, e := cnx.Read(helloMessageBuffer)
 
-	// Echo
-	cnx.Write(buffer)
-	cnx.Close()
+    if e != nil {
+        fmt.Printf("error::handle_request::%v\n", e.Error())
+        cnx.Close()
+        return
+    }
+
+    hello, e := parse_hello(helloMessageBuffer)
+    if e != nil {
+        cnx.Close()
+        return
+    }
+
+    fmt.Printf("Recieved hello: %+v\n", hello)
+    cnx.Write([]byte{0})
+    cnx.Close()
 }

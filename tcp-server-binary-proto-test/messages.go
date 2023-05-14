@@ -8,11 +8,14 @@ import (
 type MessageType uint8
 
 const (
-	ERROR   MessageType = 0x00
-	COMMAND MessageType = 0x01
+	// HACK: Skip zero as this is what Go initializes struct fields as by default
+	// kinda odd behaviour considering there's a 'nil' type
+
+	ERROR   MessageType = 0x01
+	COMMAND MessageType = 0x02
 )
 
-// TODO: learn module system and split each message into individual file in a 'Messages' directory 
+// TODO: learn module system and split each message into individual file in a 'Messages' directory
 type HelloMessage struct {
 	protocol_version uint16
 	software_version uint16
@@ -39,20 +42,20 @@ func parse_hello(buffer []byte) (HelloMessage, error) {
 
 	}
 
-	message_type := get_message_type(buffer[4])
+	messageType := get_message_type(buffer[4])
 	// TODO: Handle more error cases
 
 	return HelloMessage{
-		protocol_version: uint16(uint16(buffer[0]) | uint16(buffer[1])<<8),
-		software_version: uint16(uint16(buffer[2]) | uint16(buffer[3])<<8),
-		message_type:     message_type,
+		protocol_version: uint16(buffer[0])<<8 | uint16(buffer[1]),
+		software_version: uint16(buffer[2])<<8 | uint16(buffer[3]),
+		message_type:     messageType,
 		content_length:   buffer[5],
 	}, nil
 }
 
 func get_message_type(t uint8) MessageType {
 	switch t {
-	case 0:
+	case 2:
 		return COMMAND
 	default:
 		return ERROR

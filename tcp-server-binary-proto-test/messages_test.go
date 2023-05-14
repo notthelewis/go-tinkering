@@ -54,7 +54,7 @@ func Test_parse_hello_valid(t *testing.T) {
 	}
 
 	if msg != expectedMessage {
-		t.Errorf("Expected message incorrect, expected: %v, received: %v", expectedMessage, msg)
+		t.Errorf("Expected message incorrect, expected: %+v, received: %+v", expectedMessage, msg)
 	}
 
 }

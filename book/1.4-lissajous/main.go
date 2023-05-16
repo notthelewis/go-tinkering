@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-var pallete = []color.Color{color.Black, color.RGBA{100,30,200,4},color.RGBA{100,200,33,4}}
+var pallete = []color.Color{color.Black}
 
 const (
 	whiteIndex = 0
@@ -20,6 +20,18 @@ const (
 func main() {
 	lissajous(os.Stdout)
 }
+
+func addRandomColoursToPallete(nFrames int) {
+    for i := 0; i < nFrames; i++ {
+        pallete = append(pallete, color.RGBA{
+            uint8(rand.Intn(255)),
+            uint8(rand.Intn(255)),
+            uint8(rand.Intn(255)),
+            uint8(rand.Intn(255)),
+        })
+    }
+}
+
 
 func lissajous(file *os.File) {
 	const (
@@ -31,8 +43,10 @@ func lissajous(file *os.File) {
 	)
 
 	freq := rand.Float64() * 3.0 // Relative frequency of Y oscillator
-	anim := gif.GIF{LoopCount: nframes} // This is called a composite literal
+	anim := gif.GIF{LoopCount: nframes} 
 	phase := 0.0
+
+    addRandomColoursToPallete(nframes)
 
     // Apparently, sinusoid is another word for sine wave... the more you know 
 
@@ -43,7 +57,7 @@ func lissajous(file *os.File) {
 		for t := 0.0; t < cycles*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
-			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), uint8(rand.Intn(3)))
+			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), uint8(i))
 		}
 
 		phase += 0.1

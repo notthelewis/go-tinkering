@@ -10,7 +10,7 @@ import (
 	"os"
 )
 
-var pallete = []color.Color{color.Black, color.RGBA{100,200,33,4}}
+var pallete = []color.Color{color.Black, color.RGBA{100,30,200,4},color.RGBA{100,200,33,4}}
 
 const (
 	whiteIndex = 0
@@ -36,7 +36,6 @@ func lissajous(file *os.File) {
 
     // Apparently, sinusoid is another word for sine wave... the more you know 
 
-
 	for i := 0; i < nframes; i++ {
         // set all pixels to zro
 		rect := image.Rect(0, 0, 2*size+1, 2*size+1)
@@ -44,7 +43,7 @@ func lissajous(file *os.File) {
 		for t := 0.0; t < cycles*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
-			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), blackIndex)
+			img.SetColorIndex(size+int(x*size+0.5), size+int(y*size+0.5), uint8(rand.Intn(3)))
 		}
 
 		phase += 0.1

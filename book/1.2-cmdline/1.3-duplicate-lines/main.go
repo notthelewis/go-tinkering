@@ -1,9 +1,11 @@
-package main 
+package main
 
 import (
-    "bufio"
-    "fmt"
-    "os"
+	"bufio"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
 )
 
 func find_duplicates1() {
@@ -53,6 +55,28 @@ func find_duplicates2() {
     }
 }
 
+func find_duplicates3() {
+    counts := make(map[string]int)
+    for _, filename := range os.Args[1:] {
+        data, err := ioutil.ReadFile(filename)
+
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "duplicates3: %\n", err)
+            continue
+        }
+
+        for _, line := range strings.Split(string(data), "\n") {
+            counts[line]++
+        }
+    }
+
+    for line, n := range counts { 
+        if n > 1 { 
+            fmt.Printf("%d\t%s\n", n, line)
+        }
+    }
+}
+
 func count_lines(f *os.File, counts map[string]int) {
     input := bufio.NewScanner(f)
     for input.Scan() {
@@ -62,5 +86,6 @@ func count_lines(f *os.File, counts map[string]int) {
 
 func main() {
     // find_duplicates1()
-    find_duplicates2()
+    // find_duplicates2()
+    find_duplicates3()
 }

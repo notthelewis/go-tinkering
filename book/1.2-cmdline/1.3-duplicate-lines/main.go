@@ -9,6 +9,46 @@ import (
     "sync"
 )
 
+// Exercise 1.4, make it print filename too
+func find_duplicates_with_file() {
+    counts := make(map[string]map[string]int)
+    files := os.Args[1:]
+
+    // I had to google to find out how to make coroutines wait... 
+    var wg sync.WaitGroup
+
+    for _, file := range files {
+        f, err := os.Open(file)
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "find_duplicates_with_file: %v\n", err)
+            continue
+        }
+
+        wg.Add(1)
+        go count_lines_with_file(f, counts, &wg)
+    }
+
+    wg.Wait() 
+    for file, counter := range counts {
+        for line, times_occured := range counter {
+            if times_occured > 1 {
+                fmt.Printf("%v had a line: %v which had %v occurances\n", file, line, times_occured)
+            }
+        }
+    }
+}
+
+func count_lines_with_file(f *os.File, counts map[string]map[string]int, wg *sync.WaitGroup) {
+    defer wg.Done()
+    counts[f.Name()] = make(map[string]int)
+
+    input := bufio.NewScanner(f)
+    for input.Scan() {
+        counts[f.Name()][input.Text()]++
+    }
+}
+
+
 func find_duplicates1() {
     counts := make(map[string]int)
     input := bufio.NewScanner(os.Stdin)
@@ -61,44 +101,6 @@ func count_lines(f *os.File, counts map[string]int) {
     input := bufio.NewScanner(f)
     for input.Scan() {
         counts[input.Text()]++
-    }
-}
-
-func find_duplicates_with_file() {
-    counts := make(map[string]map[string]int)
-    files := os.Args[1:]
-
-    // I had to google to find out how to make coroutines wait... 
-    var wg sync.WaitGroup
-
-    for _, file := range files {
-        f, err := os.Open(file)
-        if err != nil {
-            fmt.Fprintf(os.Stderr, "find_duplicates_with_file: %v\n", err)
-            continue
-        }
-
-        wg.Add(1)
-        go count_lines_with_file(f, counts, &wg)
-    }
-
-    wg.Wait() 
-    for file, counter := range counts {
-        for line, times_occured := range counter {
-            if times_occured > 1 {
-                fmt.Printf("%v had a line: %v which had %v occurances\n", file, line, times_occured)
-            }
-        }
-    }
-}
-
-func count_lines_with_file(f *os.File, counts map[string]map[string]int, wg *sync.WaitGroup) {
-    defer wg.Done()
-    counts[f.Name()] = make(map[string]int)
-
-    input := bufio.NewScanner(f)
-    for input.Scan() {
-        counts[f.Name()][input.Text()]++
     }
 }
 

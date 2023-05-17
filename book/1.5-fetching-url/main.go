@@ -19,7 +19,10 @@ func prepend_uri_if_not_exists(filename string) string {
 func fetch_all() {
     for _, url := range os.Args[1:] {
         url = prepend_uri_if_not_exists(url)
+
+        fmt.Printf("GET %v: ", url)
         res, e := http.Get(url)
+        fmt.Printf("%v\n", res.StatusCode)
 
         if e != nil {
             fmt.Fprintf(os.Stderr, "fetch: %v\n", e)

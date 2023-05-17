@@ -5,10 +5,20 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 )
+
+func prepend_uri_if_not_exists(filename string) string {
+    if !strings.HasPrefix(filename, "http://") && !strings.HasPrefix(filename, "https://") {
+        return "http://"+filename
+    }
+
+    return filename
+}
 
 func fetch_all() {
     for _, url := range os.Args[1:] {
+        url = prepend_uri_if_not_exists(url)
         res, e := http.Get(url)
 
         if e != nil {

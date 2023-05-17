@@ -45,6 +45,7 @@ func fetch_all() {
 }
 
 func main() {
-    fetch_all()
+    // fetch_all()
+    FetchConcurrent()
 }
 
